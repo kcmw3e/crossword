@@ -1,0 +1,5 @@
+A command line tool for making crosswords.
+
+This is originally intented to help me with learning Japanese, but development
+will primarily be done on English words first for my own simplicity. It should
+theoretically work for any language or even just sets of characters.
