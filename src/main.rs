@@ -2,6 +2,12 @@
 //!
 //! ----------------------------------------------------------------------------
 
+use std::io::stdin;
+
 fn main() {
-    println!("Hello, world!");
+    let stdin = stdin();
+
+    let words: Vec<String> = stdin.lines().flatten().collect();
+
+    println!("Words: {words:?}");
 }
