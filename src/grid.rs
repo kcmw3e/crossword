@@ -84,7 +84,10 @@ impl Entry {
 /// assert!(c.a == 5usize);
 /// assert_eq!(c.d, 1usize);
 /// ```
-impl<T> From<(T, T)> for Coordinate where T: Into<usize> {
+impl<T> From<(T, T)> for Coordinate
+where
+    T: Into<usize>,
+{
     fn from(value: (T, T)) -> Self {
         Self { a: value.0.into(), d: value.1.into() }
     }
