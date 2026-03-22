@@ -145,3 +145,29 @@ where
         Self { a: value.0.into(), d: value.1.into() }
     }
 }
+
+/// Create a grid from a list of entries. The grid size will be determined by
+/// the maximum coordinates used by the entries.
+///
+/// ```
+/// // Example puzzle:
+/// //   0 1 2 3 4 5
+/// // 0       d
+/// // 1 a c r o s s
+/// // 2       w
+/// // 3       n
+/// let e = vec![
+///     Entry::new("across", (0usize, 1usize), GridDirection::Across),
+///     Entry::new("down", (3usize, 0usize), GridDirection::Down),
+/// ];
+/// let g = Grid::from(e.as_slice());
+/// assert_eq!(g.size_across, Some(5usize));
+/// assert_eq!(g.size_down, Some(3usize));
+/// ```
+impl From<&[Entry]> for Grid {
+    fn from(value: &[Entry]) -> Self {
+        let size_across = value.into_iter().map(Entry::max_across).max();
+        let size_down = value.into_iter().map(Entry::max_down).max();
+        Self { size_across, size_down, entries: value.into() }
+    }
+}
