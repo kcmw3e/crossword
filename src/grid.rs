@@ -56,17 +56,17 @@ pub struct Grid {
     entries: Vec<Entry>,
 }
 
-/// Simple conversion from a tuple of two `usize`s to a grid coordinate. The
+/// Simple conversion from a tuple of two values to a grid coordinate. The
 /// first value is the coordinate's across value, and the second the
 /// coordinate's down value.
 ///
 /// ```
-/// let c = Coordinate::from((5, 1));
-/// assert_eq!(c.a, 5);
-/// assert_eq!(c.d, 1);
+/// let c = Coordinate::from((5usize, 1usize));
+/// assert!(c.a == 5usize);
+/// assert_eq!(c.d, 1usize);
 /// ```
-impl From<(usize, usize)> for Coordinate {
-    fn from(value: (usize, usize)) -> Self {
-        Self { a: value.0, d: value.1 }
+impl<T> From<(T, T)> for Coordinate where T: Into<usize> {
+    fn from(value: (T, T)) -> Self {
+        Self { a: value.0.into(), d: value.1.into() }
     }
 }
