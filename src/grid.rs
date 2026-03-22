@@ -42,13 +42,13 @@ pub struct Entry {
 /// The crossword grid.
 #[derive(Debug)]
 pub struct Grid {
-    /// The maximum size of the grid in the across direction. If no size is
+    /// The maximum coordinate of the grid in the across direction. If no size
+    /// is given, the grid may be expanded as far in this direction as necessary
+    /// to fit words in.
+    size_across: Option<usize>,
+    /// The maximum coordinate of the grid in the down direction. If no size is
     /// given, the grid may be expanded as far in this direction as necessary to
     /// fit words in.
-    size_across: Option<usize>,
-    /// The maximum size of the grid in the down direction. If no size is given,
-    /// the grid may be expanded as far in this direction as necessary to fit
-    /// words in.
     size_down: Option<usize>,
     /// All of the valid entries in the grid. During grid _creation_, a separate
     /// list of "incomplete" entries may be tracked for future word placement
