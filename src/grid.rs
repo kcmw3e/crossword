@@ -56,6 +56,25 @@ pub struct Grid {
     entries: Vec<Entry>,
 }
 
+impl Entry {
+    /// Create a new entry. The text can be anything convertible to a `String`
+    /// (e.g. it implements `ToString`). The coordinates may be anything
+    /// convertible to a `Coordinate`. See documentation for
+    /// [`Coordinate::from<(T, T)>`] for how a tuple of two values is
+    /// interpreted.
+    pub fn new<T: ToString, C: Into<Coordinate>>(
+        text: T,
+        coordinate: C,
+        direction: GridDirection,
+    ) -> Self {
+        Self {
+            coordinate: coordinate.into(),
+            text: text.to_string(),
+            direction,
+        }
+    }
+}
+
 /// Simple conversion from a tuple of two values to a grid coordinate. The
 /// first value is the coordinate's across value, and the second the
 /// coordinate's down value.
