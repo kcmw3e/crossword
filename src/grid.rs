@@ -75,6 +75,59 @@ impl Entry {
     }
 }
 
+/// A collection of methods for getting coordinate bounds of entries. These are
+/// useful when determining grid validity for entries or defining grid bounds
+/// from a set of entries.
+///
+/// ```
+/// let e = Entry::new("twiddle", (3, 5), GridDirection::Across);
+/// assert_eq!(e.max_across(), 10);
+/// assert_eq!(e.max_down(), 5);
+/// assert_eq!(e.min_across(), 3);
+/// assert_eq!(e.min_down(), 5);
+///
+/// let e = Entry::new("growl", (1, 2), GridDirection::Down);
+/// assert_eq!(e.max_across(), 1);
+/// assert_eq!(e.max_down(), 7);
+/// assert_eq!(e.min_across(), 1);
+/// assert_eq!(e.min_down(), 2);
+/// ```
+impl Entry {
+    /// Return the maximum across coordinate used by this entry. If the entry is
+    /// in the across direction, this will be its across coordinate plus its
+    /// length. Otherwise, it is just the across coordinate.
+    pub fn max_across(&self) -> usize {
+        match self.direction {
+            GridDirection::Across => self.coordinate.a + self.text.len() - 1,
+            GridDirection::Down => self.coordinate.a,
+        }
+    }
+
+    /// Return the maximum down coordinate used by this entry. If the entry is
+    /// in the down direction, this will be its down coordinate plus its
+    /// length. Otherwise, it is just the down coordinate.
+    pub fn max_down(&self) -> usize {
+        match self.direction {
+            GridDirection::Across => self.coordinate.d,
+            GridDirection::Down => self.coordinate.d + self.text.len() - 1,
+        }
+    }
+
+    /// Return the minimum across coordinate used by this entry. This is simply
+    /// the same as the across coordinate in the entry's [`Entry::coordinate`]
+    /// field.
+    pub fn min_across(&self) -> usize {
+        return self.coordinate.a;
+    }
+
+    /// Return the minimum down coordinate used by this entry. This is simply
+    /// the same as the down coordinate in the entry's [`Entry::coordinate`]
+    /// field.
+    pub fn min_down(&self) -> usize {
+        return self.coordinate.d;
+    }
+}
+
 /// Simple conversion from a tuple of two values to a grid coordinate. The
 /// first value is the coordinate's across value, and the second the
 /// coordinate's down value.
