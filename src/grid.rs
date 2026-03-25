@@ -76,11 +76,18 @@ impl Coordinate {
     ///
     /// The bounding coordinates do not need to be sorted/ordered in any way.
     #[inline(always)]
-    fn is_within(self, bound1: Self, bound2: Self) -> bool {
-        let min_across = std::cmp::min(bound1.a, bound2.a);
-        let max_across = std::cmp::max(bound1.a, bound2.a);
-        let min_down = std::cmp::min(bound1.d, bound2.d);
-        let max_down = std::cmp::max(bound1.d, bound2.d);
+    fn is_within(
+        self,
+        bound1: impl Into<Self>,
+        bound2: impl Into<Self>,
+    ) -> bool {
+        let c1 = bound1.into();
+        let c2 = bound2.into();
+
+        let min_across = std::cmp::min(c1.a, c2.a);
+        let max_across = std::cmp::max(c1.a, c2.a);
+        let min_down = std::cmp::min(c1.d, c2.d);
+        let max_down = std::cmp::max(c1.d, c2.d);
 
         min_across <= self.a
             && self.a <= max_across
