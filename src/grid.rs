@@ -115,6 +115,16 @@ impl Entry {
     }
 }
 
+/// Methods pertaining to comparisons between two entries.
+impl Entry {
+    #[inline(always)]
+    /// Return whether this entry is parallel (in the same direction as) another
+    /// entry.
+    pub fn is_parallel_to(&self, other: &Self) -> bool {
+        self.direction == other.direction
+    }
+}
+
 /// A collection of methods for getting coordinate bounds of entries. These are
 /// useful when determining grid validity for entries or defining grid bounds
 /// from a set of entries.
