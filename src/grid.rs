@@ -176,6 +176,25 @@ impl Entry {
     pub fn min_down(&self) -> usize {
         return self.coordinate.d;
     }
+
+    /// The coordinate at which the entry starts.
+    pub fn start_coordinate(&self) -> Coordinate {
+        return self.coordinate;
+    }
+
+    /// The coordinate at which the entry ends.
+    pub fn end_coordinate(&self) -> Coordinate {
+        match self.direction {
+            GridDirection::Across => Coordinate {
+                a: self.coordinate.a + self.text.len() - 1,
+                d: self.coordinate.d,
+            },
+            GridDirection::Down => Coordinate {
+                a: self.coordinate.a,
+                d: self.coordinate.d + self.text.len() - 1,
+            },
+        }
+    }
 }
 
 /// Simple conversion from a tuple of two values to a grid coordinate. The
