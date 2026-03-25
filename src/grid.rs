@@ -197,6 +197,14 @@ impl Entry {
     }
 }
 
+/// Simple conversion from a grid entry into a grid coordinate so it can be used
+/// with coordinate-comparing methods/functions.
+impl Into<Coordinate> for Entry {
+    fn into(self) -> Coordinate {
+        self.coordinate
+    }
+}
+
 /// Simple conversion from a tuple of two values to a grid coordinate. The
 /// first value is the coordinate's across value, and the second the
 /// coordinate's down value.
