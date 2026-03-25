@@ -50,10 +50,42 @@ pub struct Grid {
     /// given, the grid may be expanded as far in this direction as necessary to
     /// fit words in.
     size_down: Option<usize>,
+    // TODO: this is kind of a lie. We should keep track of the invalid entries
+    //       here because the "add" method doesn't check validity, and may
+    //       insert a word that completely invalidates the grid.
     /// All of the valid entries in the grid. During grid _creation_, a separate
     /// list of "incomplete" entries may be tracked for future word placement
     /// candidates, but these entries _must_ always be valid.
     entries: Vec<Entry>,
+}
+
+pub struct IncompleteGrid {
+    grid: Grid,
+    /// Entries in the grid that are side-effects of adding to the main entries
+    /// list. These are possibly-incomplete or invalid entries that must be
+    /// satisfied in order for the grid to be considered satisfied.
+    entry_fragments: Vec<Entry>,
+}
+
+impl Coordinate {
+    /// Check if this coordinate is between two other coordinates. If the two
+    /// other coordinates do not create an across or down line (e.g. they are
+    /// diagonal), this will check if this coordinate is within the bounding box
+    /// described by the other two coordinates. Note that the comparison is
+    /// inclusive of the bounds.
+    ///
+    /// The bounding coordinates do not need to be sorted/ordered in any way.
+    fn is_within(self, bound1: Self, bound2: Self) -> bool {
+        let min_across = std::cmp::min(bound1.a, bound2.a);
+        let max_across = std::cmp::max(bound1.a, bound2.a);
+        let min_down = std::cmp::min(bound1.d, bound2.d);
+        let max_down = std::cmp::max(bound1.d, bound2.d);
+
+        min_across <= self.a
+            && self.a <= max_across
+            && min_down <= self.d
+            && self.d <= max_down
+    }
 }
 
 impl Entry {
