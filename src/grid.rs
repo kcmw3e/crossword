@@ -248,3 +248,33 @@ impl From<&[Entry]> for Grid {
         Self { size_across, size_down, entries: value.into() }
     }
 }
+
+#[test]
+fn test_coordinate_is_within() {
+    let tests: [[(usize, usize); _]; _] = [
+        //   0 1 2 3
+        // 0 +-----x
+        // 1 | 1 2 |
+        // 2 | 3 4 |
+        // 3 x-----+
+        [(0, 3), (3, 0), (1, 1)],
+        [(0, 3), (3, 0), (2, 1)],
+        [(0, 3), (3, 0), (1, 2)],
+        [(0, 3), (3, 0), (2, 2)],
+
+        //   0 1
+        // 0 1-x
+        // 1 x-2
+        [(1, 0), (0, 1), (0, 0)],
+        [(1, 0), (0, 1), (1, 1)],
+        // Also test the bounds themselves
+        [(1, 0), (0, 1), (1, 0)],
+        [(1, 0), (0, 1), (0, 1)],
+    ];
+
+    for test in tests {
+        let [c1, c2, c3] = test.map(Coordinate::from);
+        assert!(c3.is_within(c1, c2));
+        assert!(c3.is_within(c2, c1));
+    }
+}
