@@ -5,7 +5,7 @@
 /// A direction in the crossword grid space. Colloquial names for crossword
 /// clue directions are used to ease reasoning and mental visuals, but in theory
 /// these could be any direction on a 2D grid.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum GridDirection {
     /// The "across" direction. On paper, this is typically horizontal toward
     /// the right.
