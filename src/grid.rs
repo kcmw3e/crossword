@@ -123,6 +123,55 @@ impl Entry {
     pub fn is_parallel_to(&self, other: &Self) -> bool {
         self.direction == other.direction
     }
+
+    /// Check whether this entry overlaps with another entry. This is distinct
+    /// from an intersection in that entries must be parallel for them to be
+    /// considered overlapping.
+    ///
+    /// For example, the grid below shows the words overlapping:
+    ///
+    /// ```
+    /// //   0 1
+    /// // 0   i
+    /// // 1   n
+    /// // 2   tt
+    /// // 3   oo
+    /// // 4    p
+    /// let e1 = Entry::new("into", (1usize, 0usize), GridDirection::Down);
+    /// let e2 = Entry::new("top", (1usize, 2usize), GridDirection::Down);
+    /// assert!(e1.overlaps(e2));
+    /// ```
+    pub fn overlaps(&self, other: &Self) -> bool {
+        let ss = self.start_coordinate();
+        let se = self.end_coordinate();
+        let os = other.start_coordinate();
+        let oe = other.end_coordinate();
+
+        if self.is_parallel_to(other) {
+            // If either the start or the end coordinate of the other entry lies
+            // between (inclusive) this entry's start and end, and they are
+            // collinear, then there is overlap.
+            let is_within = os.is_within(ss, se) || oe.is_within(ss, se);
+            let is_same_level = match self.direction {
+                GridDirection::Across => {
+                    // This has to be true since they are marked as parallel.
+                    debug_assert_eq!(other.direction, GridDirection::Across);
+
+                    // Overlapping if the coordinates are on the same level AND
+                    // either the start or the end coordinate of the other.
+                    self.coordinate.d == other.coordinate.d
+                },
+                GridDirection::Down => {
+                    // This has to be true since they are marked as parallel.
+                    debug_assert_eq!(other.direction, GridDirection::Down);
+                    self.coordinate.a == other.coordinate.a
+                },
+            };
+            is_within && is_same_level
+        } else {
+            false
+        }
+    }
 }
 
 /// A collection of methods for getting coordinate bounds of entries. These are
@@ -276,5 +325,70 @@ fn test_coordinate_is_within() {
         let [c1, c2, c3] = test.map(Coordinate::from);
         assert!(c3.is_within(c1, c2));
         assert!(c3.is_within(c2, c1));
+    }
+}
+
+#[test]
+fn test_entries_overlap() {
+    let tests = [
+        //     0 1 2 3 4 5
+        //   0 c u t
+        //       u t t e r
+        (
+            Entry::new("cut", (0usize, 0usize), GridDirection::Across),
+            Entry::new("utter", (1usize, 0usize), GridDirection::Across),
+        ),
+        //     0 1 2 3 4 5 6 7
+        //   0 y o u r s
+        //         u n r e a l
+        (
+            Entry::new("yours", (0usize, 0usize), GridDirection::Across),
+            Entry::new("unreal", (2usize, 0usize), GridDirection::Across),
+        ),
+    ];
+
+    for test in tests {
+        let (e1, e2) = test;
+        assert!(e1.overlaps(&e2), "Entries should overlap: {e1:?} -> {e2:?}");
+
+        // Intersections between entries are symmetric.
+        assert!(
+            e2.overlaps(&e1),
+            "Entries should overlap symmetrically: {e1:?} -> {e2:?}"
+        );
+    }
+}
+
+#[test]
+fn test_entries_do_not_overlap() {
+    let tests = [
+        //     0 1 2 3 4 5
+        //   0 c u t
+        //           u t t e r
+        (
+            Entry::new("cut", (0usize, 0usize), GridDirection::Across),
+            Entry::new("utter", (3usize, 0usize), GridDirection::Across),
+        ),
+        //     0 1 2 3 4 5 6 7
+        //   0 y o u r s
+        //               u n r e a l
+        (
+            Entry::new("yours", (0usize, 0usize), GridDirection::Across),
+            Entry::new("unreal", (5usize, 0usize), GridDirection::Across),
+        ),
+    ];
+
+    for test in tests {
+        let (e1, e2) = test;
+        assert!(
+            !e1.overlaps(&e2),
+            "Entries should not overlap: {e1:?} -> {e2:?}"
+        );
+
+        // Intersections between entries are symmetric.
+        assert!(
+            !e2.overlaps(&e1),
+            "Entries should not overlap symmetrically: {e1:?} -> {e2:?}"
+        );
     }
 }
