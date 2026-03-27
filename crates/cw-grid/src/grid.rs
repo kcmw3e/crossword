@@ -223,14 +223,14 @@ impl Entry {
 /// use crossword_grid::grid::{Entry, GridDirection};
 ///
 /// let e = Entry::new("twiddle", (3usize, 5usize), GridDirection::Across);
-/// assert_eq!(e.max_across(), 10);
+/// assert_eq!(e.max_across(), 9);
 /// assert_eq!(e.max_down(), 5);
 /// assert_eq!(e.min_across(), 3);
 /// assert_eq!(e.min_down(), 5);
 ///
 /// let e = Entry::new("growl", (1usize, 2usize), GridDirection::Down);
 /// assert_eq!(e.max_across(), 1);
-/// assert_eq!(e.max_down(), 7);
+/// assert_eq!(e.max_down(), 6);
 /// assert_eq!(e.min_across(), 1);
 /// assert_eq!(e.min_down(), 2);
 /// ```
