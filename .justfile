@@ -16,6 +16,8 @@ alias b := build
 alias c := clean
 alias t := test
 alias r := run
+alias d := docs
+alias od := open-docs
 
 
 build:
@@ -32,3 +34,11 @@ test:
 
 run *args:
     cargo run -- {{args}}
+
+
+docs:
+    cargo doc
+
+
+open-docs: docs
+    cargo doc --open
