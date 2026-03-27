@@ -131,6 +131,7 @@ impl Entry {
     /// For example, the grid below shows the words overlapping:
     ///
     /// ```
+    /// use crossword_grid::grid::{Entry, GridDirection};
     /// //   0 1
     /// // 0   i
     /// // 1   n
@@ -180,6 +181,7 @@ impl Entry {
     /// For example, the grid below shows the words intersecting:
     ///
     /// ```
+    /// use crossword_grid::grid::{Entry, GridDirection};
     /// //   0 1 2 3
     /// // 0   e
     /// // 1 c r a b
@@ -218,6 +220,8 @@ impl Entry {
 /// from a set of entries.
 ///
 /// ```
+/// use crossword_grid::grid::{Entry, GridDirection};
+///
 /// let e = Entry::new("twiddle", (3, 5), GridDirection::Across);
 /// assert_eq!(e.max_across(), 10);
 /// assert_eq!(e.max_down(), 5);
@@ -315,6 +319,7 @@ where
 /// the maximum coordinates used by the entries.
 ///
 /// ```
+/// use crossword_grid::grid::{Entry, Grid, GridDirection};
 /// // Example puzzle:
 /// //   0 1 2 3 4 5
 /// // 0       d
