@@ -172,6 +172,45 @@ impl Entry {
             false
         }
     }
+
+    /// Check whether this entry intersects with another entry. This is distinct
+    /// from an overlap in that entries must be perpendicular for them to be
+    /// considered intersecting.
+    ///
+    /// For example, the grid below shows the words intersecting:
+    ///
+    /// ```
+    /// //   0 1 2 3
+    /// // 0   e
+    /// // 1 c r a b
+    /// // 2   a
+    /// let e1 = Entry::new("era", (1usize, 0usize), GridDirection::Down);
+    /// let e2 = Entry::new("crab", (0usize, 1usize), GridDirection::Across);
+    /// assert!(e1.intersects(e2));
+    /// ```
+    pub fn intersects(&self, other: &Self) -> bool {
+        let ss = self.start_coordinate();
+        let se = self.end_coordinate();
+        let os = other.start_coordinate();
+        let oe = other.end_coordinate();
+
+        if !self.is_parallel_to(other) {
+            match (self.direction, other.direction) {
+                (GridDirection::Across, GridDirection::Across)
+                | (GridDirection::Down, GridDirection::Down) => false,
+                (GridDirection::Across, GridDirection::Down) => {
+                    (os.d <= ss.d && ss.d <= oe.d)
+                        && (ss.a <= os.a && os.a <= se.a)
+                },
+                (GridDirection::Down, GridDirection::Across) => {
+                    (os.a <= ss.a && ss.a <= oe.a)
+                        && (ss.d <= os.d && os.d <= se.d)
+                },
+            }
+        } else {
+            false
+        }
+    }
 }
 
 /// A collection of methods for getting coordinate bounds of entries. These are
@@ -389,6 +428,45 @@ fn test_entries_do_not_overlap() {
         assert!(
             !e2.overlaps(&e1),
             "Entries should not overlap symmetrically: {e1:?} -> {e2:?}"
+        );
+    }
+}
+
+#[test]
+fn test_entries_intersect() {
+    let tests = [
+        //     0 1 2
+        //   0 o u t
+        //   1   n
+        //   2   d
+        //   3   o
+        (
+            Entry::new("out", (0usize, 0usize), GridDirection::Across),
+            Entry::new("undo", (1usize, 0usize), GridDirection::Down),
+        ),
+        //     0 1 2 3 4 5 6
+        //   0 t u r m o i l
+        //   1       o
+        //   2       u
+        //   3       n
+        //   4       t
+        (
+            Entry::new("turnmoil", (0usize, 0usize), GridDirection::Across),
+            Entry::new("mount", (3usize, 0usize), GridDirection::Down),
+        ),
+    ];
+
+    for test in tests {
+        let (e1, e2) = test;
+        assert!(
+            e1.intersects(&e2),
+            "Entries should intersect: {e1:?} -> {e2:?}"
+        );
+
+        // Intersections between entries are symmetric.
+        assert!(
+            e2.intersects(&e1),
+            "Entries should intersect: {e1:?} -> {e2:?}"
         );
     }
 }
