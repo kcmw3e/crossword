@@ -1,6 +1,9 @@
-[package]
-name = "crossword-generator"
+[workspace.package]
 version = "0.0.0"
 edition = "2024"
 
-[dependencies]
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.dependencies]

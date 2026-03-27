@@ -21,9 +21,9 @@ pub enum GridDirection {
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Coordinate {
     /// The across coordinate (e.g. horizontal).
-    a: usize,
+    pub a: usize,
     /// The down coordinate (e.g. vertical).
-    d: usize,
+    pub d: usize,
 }
 
 /// A word entry in the crossword.
@@ -45,11 +45,11 @@ pub struct Grid {
     /// The maximum coordinate of the grid in the across direction. If no size
     /// is given, the grid may be expanded as far in this direction as necessary
     /// to fit words in.
-    size_across: Option<usize>,
+    pub size_across: Option<usize>,
     /// The maximum coordinate of the grid in the down direction. If no size is
     /// given, the grid may be expanded as far in this direction as necessary to
     /// fit words in.
-    size_down: Option<usize>,
+    pub size_down: Option<usize>,
     // TODO: this is kind of a lie. We should keep track of the invalid entries
     //       here because the "add" method doesn't check validity, and may
     //       insert a word that completely invalidates the grid.
@@ -131,6 +131,7 @@ impl Entry {
     /// For example, the grid below shows the words overlapping:
     ///
     /// ```
+    /// use crossword_grid::grid::{Entry, GridDirection};
     /// //   0 1
     /// // 0   i
     /// // 1   n
@@ -139,7 +140,7 @@ impl Entry {
     /// // 4    p
     /// let e1 = Entry::new("into", (1usize, 0usize), GridDirection::Down);
     /// let e2 = Entry::new("top", (1usize, 2usize), GridDirection::Down);
-    /// assert!(e1.overlaps(e2));
+    /// assert!(e1.overlaps(&e2));
     /// ```
     pub fn overlaps(&self, other: &Self) -> bool {
         let ss = self.start_coordinate();
@@ -180,13 +181,14 @@ impl Entry {
     /// For example, the grid below shows the words intersecting:
     ///
     /// ```
+    /// use crossword_grid::grid::{Entry, GridDirection};
     /// //   0 1 2 3
     /// // 0   e
     /// // 1 c r a b
     /// // 2   a
     /// let e1 = Entry::new("era", (1usize, 0usize), GridDirection::Down);
     /// let e2 = Entry::new("crab", (0usize, 1usize), GridDirection::Across);
-    /// assert!(e1.intersects(e2));
+    /// assert!(e1.intersects(&e2));
     /// ```
     pub fn intersects(&self, other: &Self) -> bool {
         let ss = self.start_coordinate();
@@ -218,15 +220,17 @@ impl Entry {
 /// from a set of entries.
 ///
 /// ```
-/// let e = Entry::new("twiddle", (3, 5), GridDirection::Across);
-/// assert_eq!(e.max_across(), 10);
+/// use crossword_grid::grid::{Entry, GridDirection};
+///
+/// let e = Entry::new("twiddle", (3usize, 5usize), GridDirection::Across);
+/// assert_eq!(e.max_across(), 9);
 /// assert_eq!(e.max_down(), 5);
 /// assert_eq!(e.min_across(), 3);
 /// assert_eq!(e.min_down(), 5);
 ///
-/// let e = Entry::new("growl", (1, 2), GridDirection::Down);
+/// let e = Entry::new("growl", (1usize, 2usize), GridDirection::Down);
 /// assert_eq!(e.max_across(), 1);
-/// assert_eq!(e.max_down(), 7);
+/// assert_eq!(e.max_down(), 6);
 /// assert_eq!(e.min_across(), 1);
 /// assert_eq!(e.min_down(), 2);
 /// ```
@@ -298,6 +302,8 @@ impl Into<Coordinate> for Entry {
 /// coordinate's down value.
 ///
 /// ```
+/// use crossword_grid::grid::Coordinate;
+///
 /// let c = Coordinate::from((5usize, 1usize));
 /// assert!(c.a == 5usize);
 /// assert_eq!(c.d, 1usize);
@@ -315,6 +321,7 @@ where
 /// the maximum coordinates used by the entries.
 ///
 /// ```
+/// use crossword_grid::grid::{Entry, Grid, GridDirection};
 /// // Example puzzle:
 /// //   0 1 2 3 4 5
 /// // 0       d
