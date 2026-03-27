@@ -13,6 +13,7 @@ build-dir := 'target/'
 alias b := build
 alias c := clean
 alias t := test
+alias r := run
 
 
 build:
@@ -25,3 +26,7 @@ clean:
 
 test:
     cargo test
+
+
+run *args:
+    cargo run -- {{args}}
