@@ -6,3 +6,12 @@
 # 
 default:
     @just --list --unsorted --justfile {{justfile()}}
+
+build-dir := 'target/'
+
+
+alias b := build
+
+
+build:
+    cargo build
