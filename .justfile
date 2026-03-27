@@ -11,7 +11,12 @@ build-dir := 'target/'
 
 
 alias b := build
+alias c := clean
 
 
 build:
     cargo build
+
+
+clean:
+    rm -r {{build-dir}}
