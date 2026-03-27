@@ -140,7 +140,7 @@ impl Entry {
     /// // 4    p
     /// let e1 = Entry::new("into", (1usize, 0usize), GridDirection::Down);
     /// let e2 = Entry::new("top", (1usize, 2usize), GridDirection::Down);
-    /// assert!(e1.overlaps(e2));
+    /// assert!(e1.overlaps(&e2));
     /// ```
     pub fn overlaps(&self, other: &Self) -> bool {
         let ss = self.start_coordinate();
@@ -188,7 +188,7 @@ impl Entry {
     /// // 2   a
     /// let e1 = Entry::new("era", (1usize, 0usize), GridDirection::Down);
     /// let e2 = Entry::new("crab", (0usize, 1usize), GridDirection::Across);
-    /// assert!(e1.intersects(e2));
+    /// assert!(e1.intersects(&e2));
     /// ```
     pub fn intersects(&self, other: &Self) -> bool {
         let ss = self.start_coordinate();
@@ -222,13 +222,13 @@ impl Entry {
 /// ```
 /// use crossword_grid::grid::{Entry, GridDirection};
 ///
-/// let e = Entry::new("twiddle", (3, 5), GridDirection::Across);
+/// let e = Entry::new("twiddle", (3usize, 5usize), GridDirection::Across);
 /// assert_eq!(e.max_across(), 10);
 /// assert_eq!(e.max_down(), 5);
 /// assert_eq!(e.min_across(), 3);
 /// assert_eq!(e.min_down(), 5);
 ///
-/// let e = Entry::new("growl", (1, 2), GridDirection::Down);
+/// let e = Entry::new("growl", (1usize, 2usize), GridDirection::Down);
 /// assert_eq!(e.max_across(), 1);
 /// assert_eq!(e.max_down(), 7);
 /// assert_eq!(e.min_across(), 1);
@@ -302,6 +302,8 @@ impl Into<Coordinate> for Entry {
 /// coordinate's down value.
 ///
 /// ```
+/// use crossword_grid::grid::Coordinate;
+///
 /// let c = Coordinate::from((5usize, 1usize));
 /// assert!(c.a == 5usize);
 /// assert_eq!(c.d, 1usize);
