@@ -21,9 +21,9 @@ pub enum GridDirection {
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Coordinate {
     /// The across coordinate (e.g. horizontal).
-    a: usize,
+    pub a: usize,
     /// The down coordinate (e.g. vertical).
-    d: usize,
+    pub d: usize,
 }
 
 /// A word entry in the crossword.
@@ -45,11 +45,11 @@ pub struct Grid {
     /// The maximum coordinate of the grid in the across direction. If no size
     /// is given, the grid may be expanded as far in this direction as necessary
     /// to fit words in.
-    size_across: Option<usize>,
+    pub size_across: Option<usize>,
     /// The maximum coordinate of the grid in the down direction. If no size is
     /// given, the grid may be expanded as far in this direction as necessary to
     /// fit words in.
-    size_down: Option<usize>,
+    pub size_down: Option<usize>,
     // TODO: this is kind of a lie. We should keep track of the invalid entries
     //       here because the "add" method doesn't check validity, and may
     //       insert a word that completely invalidates the grid.
